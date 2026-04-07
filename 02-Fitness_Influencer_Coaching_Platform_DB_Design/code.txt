@@ -1,0 +1,153 @@
+
+staff[color: blue]{
+  staff_id int PK
+  name varchar not null
+  profile_picture varchar
+  phone_number varchar
+  email varchar
+  role varchar enum[trainer,other]
+  password int
+  created_at timestamp
+  updated_at timestamp
+}
+clients[color: blue]{
+  client_id int PK
+  name varchar
+  phone_number varchar
+  email varchar
+  plan_id int FK
+  payment_id int FK
+  password int 
+  created_at datetime
+  updated_at datetime
+}
+body_memsurements [color: purple]{
+  id int PK
+  client_id int FK
+  weight decimal
+  height decimal
+  bmi decimal
+  targeted_weight decimal
+  is_health_isuee boolean
+  start_date datetime
+  log_date datetime
+  notes varchar
+}
+trainers[color: blue]{
+  trainer_id int PK
+  staff_id int FK
+  exprience int 
+  specialty
+  hire_date date
+  active bool
+  gender enum[male,female]
+}
+trainers_clients[color: blue]{
+  id int PK
+  client_id int FK
+  trainer_id int FK
+}
+plans[color: green]{
+  plan_id int PK
+  plan_name varchar
+  description varchar
+  plan_validitiya datetime
+  price int
+  trainer_id int FK
+  created_at datetime
+  updated_at datetime
+}
+progess[color: purple]{
+  progress_id int PK
+  client_id int FK
+  date datetime
+  percentage int
+  is_improvement bool
+  description varchar
+  client_response varchar
+}
+payments[color: red]{
+  payment_id int PK
+  client_id int FK
+  amount int 
+  payment_date datetime
+  payment_mode varchar
+  subscription_id int FK
+  staff_id int FK
+  is_payment bool
+  tax int
+  notes varchar
+}
+subscriptions [color: green] {
+  subscription_id int PK
+  client_id int FK
+  plan_id int FK
+  start_date datetime
+  end_date datetime
+  status 
+}
+sessions[color: orange]{
+  session_id int PK
+  trainer_id int FK
+  client_id int FK
+  session_date datetime
+  session_type varchar enum[consultation, live, checkin]
+  meet_link string
+  status varchar
+  notes varchar
+}
+check_in[color: purple]{
+  checkin_id int PK
+  client_id FK
+  trainer_id FK
+  weight decimal
+  photos string 
+  notes varchar
+  submitted_at datetime
+}
+diet_plan [color: yellow]{
+  diet_id int PK
+  plan_id int FK
+  title varchar
+  description varchar
+}
+workout_plans[color: yellow]{
+  workout_id int PK
+  plan_id int FK
+  title varchar
+  description varchar
+} 
+
+
+
+trainers.staff_id > staff.staff_id
+
+trainers_clients.trainer_id > trainers.trainer_id
+trainers_clients.client_id > clients.client_id
+
+plans.trainer_id < trainers.trainer_id
+
+subscriptions.client_id < clients.client_id
+subscriptions.plan_id > plans.plan_id
+
+payments.client_id < clients.client_id
+payments.subscription_id > subscriptions.subscription_id
+payments.staff_id > staff.staff_id
+
+progess.client_id > clients.client_id
+
+body_memsurements.client_id < clients.client_id
+
+sessions.trainer_id > trainers.trainer_id
+sessions.client_id > clients.client_id
+
+check_in.client_id > clients.client_id
+check_in.trainer_id < trainers.trainer_id
+
+diet_plan.plan_id > plans.plan_id
+workout_plans.plan_id > plans.plan_id
+
+
+
+
+
