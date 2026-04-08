@@ -1,0 +1,119 @@
+ doctors[color: indigo] {
+  id int PK
+  name varchar 
+  specialization_id int 
+  department_id int 
+  phone_number varchar
+  email varchar
+  gender varchar
+  hire_date datetime
+  created_at datetime
+  updated_at datetime
+}
+ doctor_departments [color: indigo]{
+  id int PK
+  name varchar
+  description varchar
+  block_no int
+  head_id int
+}
+ doctor_specializations [color: indigo]{
+  id int PK
+  name varchar
+  licence int
+  exprience int
+}
+ patients [color: green]{
+  id int PK
+  name varchar
+  DOB datetime
+  gender varchar
+  phone varchar
+  email varchar
+  adress varchar
+  blood_group varchar
+  allergies varchar
+  insuarnce_id varchar
+  old_deasses varchar
+  created_at datetime
+  updated_at datetime
+}
+ appointments [color: orange] {
+  id int PK
+  patient_id int
+  doctor_id int
+  appointment_date  dateTime
+  start_time time
+  status varchar // ('Scheduled', 'Completed', 'Cancelled', 'No-Show').
+  reason_for_visit varchar
+  appointment_type_id varchar 
+  notes varchar
+  created_at datetime
+  updated_at datetime
+}
+ appointments_type [color: orange]{
+  id int PK
+  name varchar
+  price int
+  description varchar
+  created_at datetime
+  updated_at datetime
+}
+ tests [color: cyan]{
+  id int PK
+  name varchar
+  price int
+  decription varchar
+  laboratory_name varchar
+  test_date datetime
+  status varchar // (Pending, Completed, Cancelled)
+  consultation_id int 
+
+}
+ reports [color: cyan]{
+  id int PK
+  name varchar
+  test_id int
+  report_date datetime
+  lab_notes varchar
+  description varchar
+  LabReferenceNumber int
+  Diagnosis varchar
+}
+ payments [color: purple] {
+  id int PK
+  transaction_id varchar
+  patient_id int
+  appointment_id int
+  amount int
+  payment datetime
+  payment_mode varchar
+  payment_status varchar
+  Receipt_Number int 
+}
+ consultations [color: red] {
+  id PK
+  appointment_id FK
+  doctor_id FK
+  patient_id FK
+  visit_date datetime
+  notes varchar
+  diagnosis varchar
+  status varchar
+  created_at datetime
+}
+
+//patients → appointments → consultations → tests → reports
+
+doctors.specialization_id < doctor_specializations.id
+doctors.department_id - doctor_departments.id
+appointments.appointment_type_id< appointments_type.id
+patients.id< tests.id
+doctors.id< tests.id
+payments.patient_id- patients.id
+patients.id < appointments.patient_id
+doctors.id < appointments.doctor_id
+appointments.id < consultations.appointment_id
+consultations.id < tests.consultation_id
+tests.id < reports.test_id
+appointments.id < payments.appointment_id
