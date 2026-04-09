@@ -1,0 +1,135 @@
+notation crows-foot
+typeface clean
+
+vehicles [icon: truck, color: blue]{
+  vehicle_id int PK
+  vehicle_number varchar
+  vehicle_category_id int FK
+  owner_name varchar
+  created_at datetime
+}
+
+vehicle_categories [icon: tag, color: purple]{
+  vehicle_category_id int PK
+  category_name varchar
+}
+
+access_categories [icon: key, color: orange]{
+  access_category_id int PK
+  access_name varchar
+}
+
+events [icon: calendar, color: red]{
+  event_id int PK
+  event_name varchar
+  start_date datetime
+  end_date datetime
+}
+
+parking_zones [icon: map, color: teal]{
+  zone_id int PK
+  zone_name varchar
+}
+
+parking_levels [icon: layers, color: cyan]{
+  level_id int PK
+  level_name varchar
+  zone_id int FK
+}
+
+parking_spot_categories [icon: bookmark, color: pink]{
+  spot_category_id int PK
+  category_name varchar
+}
+
+parking_spots [icon: square, color: green]{
+  spot_id int PK
+  spot_number int
+  zone_id int FK
+  level_id int FK
+  spot_category_id int FK
+  is_available boolean
+}
+
+reservations [icon: calendar-check, color: yellow]{
+  reservation_id int PK
+  vehicle_id int FK
+  spot_id int FK
+  event_id int FK
+  reserved_from datetime
+  reserved_to datetime
+  status varchar
+}
+
+parking_tickets [icon: ticket, color: yellow] {
+  ticket_id int PK
+  ticket_number varchar
+  issued_at datetime
+  session_id int FK
+}
+
+parking_sessions [icon: clock, color: red]{
+  session_id int PK
+  vehicle_id int FK
+  spot_id int FK
+  ticket_id int FK
+  access_category_id int FK
+  event_id int FK
+  staff_entry_id int FK
+  staff_exit_id int FK
+  entry_time datetime
+  exit_time datetime
+  is_active boolean
+}
+
+payments [icon: credit-card, color: brown] {
+  payment_id int PK
+  session_id int FK
+  amount int
+  payment_status varchar
+  payment_method varchar
+  paid_at datetime
+}
+
+ev_charging_sessions [icon: battery-charging, color: green]{
+  charging_id int PK
+  session_id int FK
+  charging_start_time datetime
+  charging_end_time datetime
+  units_consumed int
+  charging_cost int
+}
+
+staff [icon: user, color: gray]{
+  staff_id int PK
+  name varchar
+  role varchar
+}
+
+------ Relationships ------
+
+vehicle_categories.vehicle_category_id < vehicles.vehicle_category_id
+
+vehicles.vehicle_id < parking_sessions.vehicle_id
+vehicles.vehicle_id < reservations.vehicle_id
+
+parking_spots.spot_id < parking_sessions.spot_id
+parking_spots.spot_id < reservations.spot_id
+
+parking_sessions.session_id - payments.session_id
+parking_sessions.session_id < ev_charging_sessions.session_id
+
+parking_zones.zone_id < parking_levels.zone_id
+parking_levels.level_id < parking_spots.level_id
+
+parking_spot_categories.spot_category_id < parking_spots.spot_category_id
+
+access_categories.access_category_id < parking_sessions.access_category_id
+
+parking_tickets.session_id - parking_sessions.session_id
+
+parking_sessions.staff_entry_id - staff.staff_id
+parking_sessions.staff_exit_id - staff.staff_id
+
+events.event_id < parking_sessions.event_id
+events.event_id < reservations.event_id
