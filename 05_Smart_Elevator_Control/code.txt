@@ -1,0 +1,136 @@
+// BUILDINGS
+buildings [icon: building, color: blue] {
+  building_id int PK
+  name varchar
+  address varchar
+  city varchar
+  country varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+// FLOORS
+floors [icon: layers, color: green] {
+  floor_id int PK
+  building_id int FK
+  floor_number int
+  floor_name varchar
+  zone_id int FK
+}
+
+// ZONES (for high rise segmentation)
+zones [icon: grid, color: teal] {
+  zone_id int PK
+  building_id int FK
+  name varchar
+  min_floor int
+  max_floor int
+}
+
+// ELEVATOR GROUPS (bank of elevators)
+elevator_groups [icon: users, color: orange] {
+  group_id int PK
+  building_id int FK
+  name varchar
+}
+
+// ELEVATORS
+elevators [icon: move-vertical, color: purple] {
+  elevator_id int PK
+  building_id int FK
+  group_id int FK
+  capacity int
+  speed decimal
+  installation_date date
+  is_active boolean
+}
+
+// MANY TO MANY (which elevator serves which floor)
+elevator_floor_map [icon: shuffle, color: pink] {
+  id int PK
+  elevator_id int FK
+  floor_id int FK
+}
+
+// FLOOR REQUESTS
+floor_requests [icon: arrow-up, color: red] {
+  request_id int PK
+  building_id int FK
+  source_floor_id int FK
+  destination_floor_id int FK
+  direction varchar
+  priority int
+  requested_at timestamp
+  status varchar
+}
+
+// RIDE ASSIGNMENTS
+ride_assignments [icon: link, color: yellow] {
+  ride_id int PK
+  request_id int FK
+  elevator_id int FK
+  assigned_at timestamp
+}
+
+// RIDE LOGS
+ride_logs [icon: activity, color: cyan] {
+  log_id int PK
+  elevator_id int FK
+  ride_id int FK
+  start_floor int
+  end_floor int
+  start_time timestamp
+  end_time timestamp
+  distance int
+}
+
+// ELEVATOR STATUS HISTORY
+elevator_status [icon: toggle-right, color: brown] {
+  status_id int PK
+  elevator_id int FK
+  status varchar
+  updated_at timestamp
+}
+
+// MAINTENANCE TYPES
+maintenance_types [icon: tag, color: gray] {
+  type_id int PK
+  name varchar
+}
+
+// MAINTENANCE LOGS
+maintenance_logs [icon: tool, color: gray] {
+  maintenance_id int PK
+  elevator_id int FK
+  type_id int FK
+  issue varchar
+  start_time timestamp
+  end_time timestamp
+  status varchar
+}
+
+buildings.building_id > floors.building_id
+buildings.building_id > zones.building_id
+buildings.building_id > elevator_groups.building_id
+buildings.building_id > elevators.building_id
+
+zones.zone_id > floors.zone_id
+
+elevator_groups.group_id > elevators.group_id
+
+elevators.elevator_id > elevator_floor_map.elevator_id
+floors.floor_id > elevator_floor_map.floor_id
+
+floors.floor_id > floor_requests.source_floor_id
+floors.floor_id > floor_requests.destination_floor_id
+
+floor_requests.request_id > ride_assignments.request_id
+elevators.elevator_id > ride_assignments.elevator_id
+
+ride_assignments.ride_id > ride_logs.ride_id
+elevators.elevator_id > ride_logs.elevator_id
+
+elevators.elevator_id > elevator_status.elevator_id
+
+maintenance_types.type_id > maintenance_logs.type_id
+elevators.elevator_id > maintenance_logs.elevator_id

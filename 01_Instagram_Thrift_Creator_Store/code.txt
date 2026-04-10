@@ -1,0 +1,120 @@
+title online-order
+
+// products, customers, orders, order items, payment, shipping, inventory
+
+
+customers [icon: user, color: blue] {
+  customer_id Int PK 
+  name varchar not null
+  email varchar
+  phone_number varchar not null
+  password varchar not null
+  createdAt timestamp
+  updatedAt timestamp
+}
+bank_details[icon: bank, color: purple]{
+  id pk
+  customer_id int FK
+  account_no int not null unique
+  account_holder_name not null
+  bank_name varchar not null
+  branch varchar notnull
+  ifsc_code varchar notnull
+  createdAt timestamp
+  updatedAt timestamp
+}
+address [icon: ship, color: teal] {
+  adress_id int pk
+  home_no varchar
+  street_address varchar
+  city varchar
+  state varchar
+  pincode varchar
+  customer_id FK 
+}
+products[icon: product, color: orange]{
+  product_id pk
+  name varchar
+  description varchar
+  size_id int fk
+  category_id int fk
+  color_id int FK
+  price int 
+  createdAt timestamp
+  updatedAt timestamp
+}
+size[color: yellow]{
+  size_id PK
+  name varchar
+  in_inch varchar
+  weight int
+  unit varchar
+}
+categories[color: yellow]{
+  category_id PK
+  name varchar
+  createdAt timestamp
+  updatedAt timestamp
+}
+inventory[color:red]{
+  inventory_id int PK
+  product_id FK
+  Intial_stock int
+  sold_stock int
+  available_stock int
+  createdAt timestamp
+  updatedAt timestamp
+}
+payments[icon: payment, color: green]{
+ transaction_id int PK
+ amount int
+ payment_date datetime
+ sender_account_no varchar
+ receiver_account_no varchar
+
+ createdAt timestamp
+ updatedAt timestamp
+}
+orders[icon: shopping-cart, color: pink]{
+ order_id int pk
+ customer_id int fk
+ order_date datetime
+ shipping_id int fk
+ order_items_id int fk
+ transaction_id int fk
+ order_items_id fk
+
+ createdAt datetime
+ updatedAtAt datetime
+}
+shipping[icon: truck, color: cyan] {
+  shipping_id int PK
+  status varchar 
+  expected_delivery datetime
+  deliver_date datetime
+  payment_status varchar
+}
+order_items[icon: list, color: brown]{
+ order_items_id PK
+ order_id FK
+ product_id FK
+ quantity int
+ price decimal
+ }
+
+
+
+customers.customer_id - address.customer_id
+customers.customer_id < bank_details.customer_id
+orders.customer_id-customers.customer_id 
+
+payments.transaction_id-orders.transaction_id 
+orders.shipping_id- shipping.shipping_id
+order_items.order_items_id-orders.order_items_id 
+products.product_id -order_items.product_id
+ 
+inventory.inventory_id-products.inventory_id 
+
+size.size_id-products.size_id 
+categories.category_id-products.category_id 
+
