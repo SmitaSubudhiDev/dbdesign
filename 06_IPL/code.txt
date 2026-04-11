@@ -1,0 +1,102 @@
+//  teams,players,sponsorship,owners,brodcasters 
+
+teams[icon:users, color: blue]{
+  team_id int PK
+  team_name varchar
+  city varchar
+  logo_url varchar 
+  coach_name varchar
+  matches_played int
+  wins int
+  losses int
+  points decimal
+  establish_year year
+  titles_wins int
+  total_price_in_auction int 
+  
+  created_at datetime
+  updated_at datetime
+}
+players[icon:user, color: green]{
+  player_id int PK
+  full_name varchar
+  short_name varchar
+  country varchar
+  DOB date
+  image_url varchar
+  role varchar enum[captain,keeper,player]
+  matches_played int
+  total_scores int
+  sixes int
+  fourss int
+  50s int
+  100s int
+  records varchar
+  high_score int
+  batting_avg decimal 
+  strike_rate decimal
+  wickets int
+  jersy_number int
+  auction_price int
+  created_at datetime
+  updated_at datetime
+}
+team_player [icon:link, color: purple]{
+  id int PK
+  team_id int FK
+  player_id int FK
+  role varchar 
+  join_date datetime
+  leave_date datetime
+  price int
+}
+team_sponsorship[icon:money, color: orange]{
+  sponsorship_id int PK
+  sponshor_name varchar
+  percentage decimal
+  team_id int FK
+  price int
+  start_date datetime
+  end_date datetime
+
+  created_at datetime
+  updated_at datetime
+}
+team_owners[icon:crown, color: yellow]{
+  owner_id int PK
+  owner_name varchar 
+  team_id int FK
+  start_date datetime
+  end_date datetime
+
+  created_at datetime
+  updated_at datetime
+}
+team_broadcaster[icon:tv, color: red] {
+  id int PK
+  team_id int FK
+  rights_price int
+  start_date datetime
+  end_date datetime
+  broadcaster_id FK
+
+  created_at datetime
+  updated_at datetime
+}
+broadcaster [icon:broadcast, color: red]{
+  broadcaster_id int PK
+  broadcaster_name varchar
+}
+
+team_player.team_id -teams.team_id
+team_player.player_id - players.player_id
+
+team_owners.team_id-teams.team_id
+
+team_sponsorship.team_id -teams.team_id
+team_broadcaster.team_id -teams.team_id
+team_broadcaster.broadcaster_id -broadcaster.broadcaster_id
+
+
+
+
